@@ -1,0 +1,15 @@
+add_rules("plugin.compile_commands.autoupdate", {outputdir = ".vscode"})
+add_rules("mode.debug", "mode.release")
+
+includes("**/xmake.lua")
+add_requires("fmt", "redis-plus-plus")
+
+target("sim_order")
+    set_kind("binary")
+    add_files("src/*.cpp")
+    add_includedirs("include")
+    add_deps("redispp", "utils", "xmf")
+    add_packages("fmt", "redis-plus-plus")
+    after_build(function (target)
+        os.cp("$(projectdir)/config/config.json", target:targetdir())
+    end)
